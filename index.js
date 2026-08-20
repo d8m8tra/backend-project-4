@@ -1,22 +1,21 @@
 #!/usr/bin/env node
+import { program } from 'commander';
+import fileCreate from './fileCreate.js';
 
-// Реализуйте утилиту командной строки page-loader,сдлуфк
-// которая скачивает страницу из сети и кладёт в указанную директорию
-// (по умолчанию в директорию запуска программы).
-// Программа должна возвращать полный путь к загруженному файлу.
+const app = (url) => {
+  const options = program.opts();
 
-import { program } from "commander";
-
-// page-loader --output /var/tmp https://ru.hexlet.io/courses
-
-const parser = (page) => {
-  console.log(page);
+  return fileCreate(url, options)
+    .then((filePath) => {
+      console.log(filePath);
+    });
 };
 
 program
-  .name("page-loader")
-  .version("0.0.1")
-  .option("-o, --output [dir]", "output dir", "/home/user/current-dir")
-  .action(parser) // Когда программа будет запущена без какой-то специальной команды, выполни функцию
-  .arguments("<page>")
+  .description('Page loader utility')
+  .name('page-loader')
+  .version('0.0.1')
+  .option('-o, --output [dir]', 'output dir', process.cwd())
+  .action(app) // Когда программа будет запущена без какой-то специальной команды выполни функцию
+  .arguments('<url>')
   .parse(process.argv);
